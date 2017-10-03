@@ -2,7 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+//use Illuminate\Support\ServiceProvider;
+use Carbon\Carbon;
+
+use Illuminate\Contracts\Auth\Access\Gate as GateContract;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -11,8 +15,15 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    protected $policies = [
+        'App\Model' => 'App\Policies\ModelPolicy',
+        \App\Models\User::class  => \App\Policies\UserPolicy::class,
+        \App\Models\Status::class  => \App\Policies\StatusPolicy::class,
+    ];
+    public function boot(GateContract $gate)
     {
+        $this->registerPolicies($gate);
+        Carbon::setlocale('zh');
         //
     }
 
